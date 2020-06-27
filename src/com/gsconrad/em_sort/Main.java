@@ -10,7 +10,7 @@ public class Main {
     /**
      * Number of elements in benchmark list
      */
-    private static final int size = 100000;
+    private static final int size = 10000;
     /**
      * Number of times we should run the sort
      */
@@ -46,6 +46,16 @@ public class Main {
             emSortTimes.add(runEMSort(list));
             collectionSortALTimes.add(runCollectionSortAL(arr));
             collectionSortLLTimes.add(runCollectionSortLL(arr));
+
+            // Check to see whether the size of the sorted list is correct
+            if (list.size() != size) {
+                System.out.println("EM Sort created incorrect sized list");
+            }
+
+            // Check to see whether EM Sort actually worked
+            if (checkSorted(list)) {
+                System.out.println("EM Sort did not sort correctly");
+            }
         }
 
         // Calculate averages
@@ -110,5 +120,26 @@ public class Main {
         sort.sort();
         long end = System.nanoTime();
         return end - start;
+    }
+
+    /**
+     * Checks whether the provided list is sorted correctly
+     *
+     * @param list the list to check
+     * @return whether or not the list is sorted
+     */
+    public static boolean checkSorted(List<Integer> list) {
+        if (list.isEmpty()) {
+            return true;
+        }
+        final ListIterator<Integer> i = list.listIterator();
+        for (int old = i.next(); i.hasNext(); ) {
+            final int curr = i.next();
+            if (curr < old) {
+                return false;
+            }
+            old = curr;
+        }
+        return true;
     }
 }
