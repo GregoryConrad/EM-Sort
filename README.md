@@ -1,6 +1,7 @@
 # EM Sort
 An effecient, easy to understand sorting algorithm using a stack and two subroutines: elimination and merge.
 Designed for linked lists due to their constant time insert/remove (that this algorithm depends on).
+
 The code in this repository still needs cleanup and optimization and serves primarily as a proof of concept.
 
 # Background
