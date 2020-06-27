@@ -53,7 +53,7 @@ public class Main {
             }
 
             // Check to see whether EM Sort actually worked
-            if (checkSorted(list)) {
+            if (!checkSorted(list)) {
                 System.out.println("EM Sort did not sort correctly");
             }
         }
