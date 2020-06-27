@@ -4,17 +4,32 @@ import java.util.LinkedList;
 import java.util.ListIterator;
 
 /**
- * Yet another sorting algorithm. O(1) space (elements are directly modified on list) and some fast time complexity
+ * Wrapper class for the EM Sort proof of concept
  */
 public class EMSort {
+    /**
+     * The provided list that needs to be sorted
+     */
     private final LinkedList<Integer> list;
+    /**
+     * The stack of fragment linked lists that will be merged together
+     * todo change to stack instead of linked list
+     */
     private final LinkedList<LinkedList<Integer>> tiers = new LinkedList<>();
 
+    /**
+     * Creates an instance of the EM Sort class with the given list to sort
+     * @param list the list to sort
+     */
     public EMSort(LinkedList<Integer> list) {
         this.list = list;
     }
 
+    /**
+     * Performs the elimination subroutine
+     */
     private void performElimination() {
+        // Add the list to the stack so we can start work on it
         tiers.add(list);
         while (!tiers.getLast().isEmpty()) {
             // First, we need to create a new tier
@@ -25,7 +40,7 @@ public class EMSort {
             // We create a previous high to keep track of the highest previous element
             //  (that subsequent elements need to be higher than)
             Integer previousHigh = iterator.next();
-            // This is where the meat of the elimination takes place. This is where we eliminate and add to next step
+            // This is where the meat of the elimination takes place. This is where we eliminate and add to next tier
             while (iterator.hasNext()) {
                 final Integer current = iterator.next();
                 // If the current element isn't high enough, we need to perform the elimination
@@ -43,6 +58,9 @@ public class EMSort {
         }
     }
 
+    /**
+     * Performs the merge subroutine
+     */
     private void performMerge() {
         // Now, we need to perform the merge on the last tier with the tier before the last tier
         while (tiers.size() > 1) {
@@ -77,7 +95,7 @@ public class EMSort {
     }
 
     /**
-     * The sort method of elimination-merge (EM) sort
+     * The sort method of elimination-merge (EM) sort that performs both subroutines
      * Tiers needs to be empty at every run of sort, but it will be as it will be emptied in every run
      */
     public void sort() {
