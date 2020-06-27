@@ -6,6 +6,7 @@ import java.util.Stack;
 
 /**
  * Wrapper class for the EM Sort proof of concept
+ * Currently only supports Integers (for simplicity) but can easily support other types if made generic
  */
 public class EMSort {
     /**
