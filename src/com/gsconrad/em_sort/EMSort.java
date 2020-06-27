@@ -2,6 +2,7 @@ package com.gsconrad.em_sort;
 
 import java.util.LinkedList;
 import java.util.ListIterator;
+import java.util.Stack;
 
 /**
  * Wrapper class for the EM Sort proof of concept
@@ -13,9 +14,8 @@ public class EMSort {
     private final LinkedList<Integer> list;
     /**
      * The stack of fragment linked lists that will be merged together
-     * todo change to stack instead of linked list
      */
-    private final LinkedList<LinkedList<Integer>> tiers = new LinkedList<>();
+    private final Stack<LinkedList<Integer>> tiers = new Stack<>();
 
     /**
      * Creates an instance of the EM Sort class with the given list to sort
@@ -30,13 +30,13 @@ public class EMSort {
      */
     private void performElimination() {
         // Add the list to the stack so we can start work on it
-        tiers.add(list);
-        while (!tiers.getLast().isEmpty()) {
+        tiers.push(list);
+        while (!tiers.peek().isEmpty()) {
             // First, we need to create a new tier
             final LinkedList<Integer> newTier = new LinkedList<>();
             // Next, we need to populate this new tier by iterating through the current last tier
             //  and finding elements to eliminate
-            final ListIterator<Integer> iterator = tiers.getLast().listIterator();
+            final ListIterator<Integer> iterator = tiers.peek().listIterator();
             // We create a previous high to keep track of the highest previous element
             //  (that subsequent elements need to be higher than)
             Integer previousHigh = iterator.next();
@@ -54,7 +54,7 @@ public class EMSort {
             }
             // At this point, the new tier has been created completely from the out of order elements of the prev. tier
             //  Thus, it is time to add the new tier to the tiers
-            tiers.add(newTier);
+            tiers.push(newTier);
         }
     }
 
@@ -65,9 +65,9 @@ public class EMSort {
         // Now, we need to perform the merge on the last tier with the tier before the last tier
         while (tiers.size() > 1) {
             // First, we need to get the elements from the tier we need to remove
-            final LinkedList<Integer> mergeFrom = tiers.removeLast();
+            final LinkedList<Integer> mergeFrom = tiers.pop();
             // Next, we need to get the elements from the tier we want to merge into
-            final ListIterator<Integer> mergeIntoIterator = tiers.getLast().listIterator();
+            final ListIterator<Integer> mergeIntoIterator = tiers.peek().listIterator();
             // As we need to empty the merge from iterator, we need to keep working while it is not empty
             while (!mergeFrom.isEmpty()) {
                 if (mergeIntoIterator.hasNext()) {
@@ -85,13 +85,13 @@ public class EMSort {
                     // If there is nothing to compare, we need to add our remaining elements to merge into
                     //  This is because everything remaining in mergeFrom would have to be greater than mergeInto
                     //    to reach this point in the first place
-                    tiers.getLast().addAll(mergeFrom);
+                    tiers.peek().addAll(mergeFrom);
                     mergeFrom.clear();
                 }
             }
         }
         // Remove the list itself from tiers as it has been sorted
-        tiers.remove();
+        tiers.pop();
     }
 
     /**
